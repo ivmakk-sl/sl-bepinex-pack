@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this pack are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The version is the BepInEx build identifier of the pinned build, so it does not follow semantic versioning. A repack of the same build adds `-r2`, `-r3`.
+All notable changes to this pack are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The version is the BepInEx build identifier of the pinned build, which is a valid semantic version (a prerelease of BepInEx 6.0.0). A repack of the same build adds `.2`, `.3`, for example `6.0.0-be.788.2`.
 
 ## [Unreleased]
 

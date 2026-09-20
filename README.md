@@ -10,7 +10,7 @@ Most mods for the Steam game [Survival Log](https://store.steampowered.com/app/4
 
 ## Install
 
-Close the game. Download `BepInExPack_SurvivalLog-6.0.0-be.788.zip` from [Releases](https://github.com/ivmakk-sl/sl-bepinex-pack/releases).
+Close the game. Download `BepInExPack_SurvivalLog-6.0.0-be.788.zip` from [Releases](https://github.com/ivmakk-sl/sl-bepinex-pack/releases) or from [Nexus Mods](https://www.nexusmods.com/survivallog/mods/12). The two files are the same.
 
 1. Extract the zip into `C:\Program Files (x86)\Steam\steamapps\common\Survival Log` *(if you installed Steam or the game elsewhere, find the folder in your Steam Library: right-click Survival Log > Manage > Browse local files)*.
 2. Start the game from Steam. Wait for the main menu, then quit before installing mods.
@@ -113,7 +113,7 @@ The pin is the bleeding edge build that the mods are built and tested against. I
 1. Pick the build on [builds.bepinex.dev](https://builds.bepinex.dev/projects/bepinex_be). Put its number, commit, `Unity.IL2CPP-win-x64` file name, URL, and SHA-256 into `pack.json`.
 2. Run `pack.ps1`, `verify.ps1`, and `tests/run.ps1`.
 3. Test on a clean install: move the loader entries (the Uninstall list) out of the game folder, extract the new zip, start the game, and read `BepInEx\LogOutput.log` for the build line, "Chainloader startup complete", and no error. Put a known plugin into `BepInEx\plugins` and check its load line. Then restore the old entries or keep the new ones.
-4. Update the build values in this README, `nexus/`, and `CHANGELOG.md` with the tested game version, then release with the tag `v<build>`. A repack of the same build gets `-r2`, `-r3`.
+4. Update the build values in this README, `nexus/`, and `CHANGELOG.md` with the tested game version, then release with the tag `v<build>`. A repack of the same build gets `.2`, `.3` (for example `6.0.0-be.788.2`, which semver sorts between `be.788` and the next build).
 
 If builds.bepinex.dev no longer serves the pinned build, put a copy of the official archive from any source into `cache/` under the name in `pack.json`. `pack.ps1` accepts it only when the SHA-256 matches. The GitHub Release of this repo keeps the built zip.
 
