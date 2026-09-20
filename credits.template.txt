@@ -1,0 +1,61 @@
+BepInEx Pack for Survival Log
+=============================
+
+What this is
+------------
+
+This archive is the official BepInEx 6 build {{build}} for Unity IL2CPP,
+win-x64, redistributed without changes, plus this notice containing credits
+and the license text. No file of the official build was modified,
+removed, or replaced.
+
+BepInEx is the work of the BepInEx team.
+
+    BepInEx - Unity
+    Copyright (C) 2020 BepInEx Team
+
+This pack is put together for the game Survival Log. It is not made by the
+BepInEx team and not endorsed by them, and it is not made or endorsed by the
+developer of Survival Log.
+
+The pinned build
+----------------
+
+Build number:  {{build}}
+Source commit: {{commit}}
+Official file: {{archive}}
+SHA-256:       {{sha256}}
+Download:      {{url}}
+
+Official builds: https://builds.bepinex.dev/projects/bepinex_be
+BepInEx source:  https://github.com/BepInEx/BepInEx
+This pack:      https://github.com/ivmakk-sl/sl-bepinex-pack
+
+To check the files yourself: download the official archive from the link above,
+compare its SHA-256 with the value printed here, and compare its entries with
+the entries of this zip. Everything except this file
+comes from that archive.
+
+Licenses
+--------
+
+BepInEx is licensed under the LGPL-2.1, and the full license text follows
+the component list below. The build bundles these components, each under its
+own license. All of them allow this unmodified redistribution.
+
+  BepInEx (BepInEx/core/BepInEx.*.dll) - LGPL-2.1 - https://github.com/BepInEx/BepInEx
+  UnityDoorstop (winhttp.dll, doorstop_config.ini, .doorstop_version) - LGPL-2.1 - https://github.com/NeighTools/UnityDoorstop
+  HarmonyX (0Harmony.dll) - MIT - https://github.com/BepInEx/HarmonyX
+  MonoMod (MonoMod.*.dll) - MIT - https://github.com/MonoMod/MonoMod
+  Mono.Cecil (Mono.Cecil*.dll) - MIT - https://github.com/jbevain/cecil
+  Cpp2IL (Cpp2IL.Core.dll, LibCpp2IL.dll, StableNameDotNet.dll, WasmDisassembler.dll) - MIT - https://github.com/SamboyCoding/Cpp2IL
+  Disarm (Disarm.dll) - MIT - https://github.com/SamboyCoding/Disarm
+  Il2CppInterop (Il2CppInterop.*.dll) - LGPL-3.0 - https://github.com/BepInEx/Il2CppInterop
+  AsmResolver (AsmResolver*.dll) - MIT - https://github.com/Washi1337/AsmResolver
+  Iced (Iced.dll) - MIT - https://github.com/icedland/iced
+  SemanticVersioning (SemanticVersioning.dll) - MIT - https://github.com/adamreeve/semver.net
+  Capstone.NET (Gee.External.Capstone.dll) - MIT - https://github.com/9ee1/Capstone.NET
+  Dobby (dobby.dll) - Apache-2.0 - https://github.com/jmpews/Dobby
+  AssetRipper.Primitives (AssetRipper.Primitives.dll) - MIT - https://github.com/AssetRipper/AssetRipper.Primitives
+  AssetRipper.CIL (AssetRipper.CIL.dll) - MIT - https://github.com/AssetRipper/AssetRipper.CIL
+  .NET runtime (dotnet/) - MIT - https://github.com/dotnet/runtime

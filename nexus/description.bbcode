@@ -1,0 +1,62 @@
+NOTE: It's a mod loader, NOT a mod! Install this pack only if another mod requires BepInEx, or if you are developing a BepInEx mod.
+
+[size=5][b]What this is[/b][/size]
+BepInEx is a mod loader for Survival Log. Install this pack if a mod lists it as a requirement.
+
+This pack contains the official BepInEx build [url=https://builds.bepinex.dev/projects/bepinex_be][b]6.0.0-be.788[/b][/url] with its original files unchanged. Tested with Survival Log 1.0.16756.
+
+[b]This pack is unofficial.[/b] The Survival Log developer does not make, support, or endorse it. The BepInEx team does not endorse this pack either.
+
+[size=5][b]Install[/b][/size]
+Close the game. Download the zip from the Files tab using Manual download.
+[list=1]
+[*]Extract the zip into [font=Courier New]C:\Program Files (x86)\Steam\steamapps\common\Survival Log[/font] [i](if you installed Steam or the game elsewhere, find the folder in your Steam Library: right-click Survival Log > Manage > Browse local files)[/i].
+[*]Start the game from Steam. Wait for the main menu, then quit before installing mods.
+[/list]
+
+Example after extraction (other game files omitted):
+[code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\
+├── BepInEx\
+├── dotnet\
+├── SurvivalLog.exe
+├── doorstop_config.ini
+└── winhttp.dll[/code]
+
+[size=5][b]The first start[/b][/size]
+[list]
+[*]An internet connection is required for the initial setup.
+[*]The game may show a black window while BepInEx prepares files. The first start took about 40 seconds longer on my PC. Wait for the main menu.
+[*]The BepInEx console window opens with the game. [b]Do not close the console window[/b], because that also closes the game.
+[/list]
+Check that the console shows [font=Courier New]BepInEx 6.0.0-be.788 - SurvivalLog[/font].
+
+Mods go into [font=Courier New]BepInEx\plugins[/font]. Follow each mod's installation instructions.
+
+[size=5][b]Problems[/b][/size]
+[list]
+[*][b]No console window opens.[/b] Check that [font=Courier New]winhttp.dll[/font] is next to [font=Courier New]SurvivalLog.exe[/font]. If the zip extracted into an extra folder, move its contents into the game folder.
+[*][b]BepInEx is already installed.[/b] If the console shows [font=Courier New]6.0.0-be.788[/font], you do not need this pack. For a different build, follow the [url=https://github.com/ivmakk-sl/sl-bepinex-pack#replace-an-existing-installation]replacement instructions[/url].
+[*][b]My antivirus warns about winhttp.dll.[/b] This file loads BepInEx. It is unchanged from the official build. See [url=https://github.com/ivmakk-sl/sl-bepinex-pack#verify-the-download]how to compare the files with the official download[/url].
+[*][b]Mods stopped working after a game update.[/b] Check this page and your mods' pages for updates. To play without mods, follow the Uninstall steps below.
+[*][b]The game does not start.[/b] Follow the Uninstall steps below. Then, in Steam, select Properties > Installed Files > Verify integrity of game files.
+[/list]
+Before reporting a game bug to the developer, check whether it still happens without mods.
+
+[size=5][b]Uninstall[/b][/size]
+Close the game. To keep your mods and settings, copy [font=Courier New]BepInEx\plugins[/font] and [font=Courier New]BepInEx\config[/font] somewhere outside the game folder.
+
+Delete these files and entire folders from the game folder:
+[code]BepInEx/
+dotnet/
+.doorstop_version
+changelog.txt
+doorstop_config.ini
+winhttp.dll[/code]
+Deleting [font=Courier New]BepInEx[/font] removes all installed mods and their settings. Keep the game folder and all other files. These steps do not delete your save files.
+
+[size=5][b]Credits and more information[/b][/size]
+BepInEx is made by the [url=https://github.com/BepInEx/BepInEx]BepInEx team[/url] and contributors and is licensed under LGPL-2.1. Credits and license text are included in the pack.
+
+All official BepInEx builds, this one (#788) and newer ones, are listed at [url=https://builds.bepinex.dev/projects/bepinex_be]builds.bepinex.dev[/url]. A newer build is not tested with this game until this pack moves to it.
+
+See GitHub for [url=https://github.com/ivmakk-sl/sl-bepinex-pack#manual-install-advanced]manual installation[/url], [url=https://github.com/ivmakk-sl/sl-bepinex-pack#verify-the-download]file verification[/url], and [url=https://github.com/ivmakk-sl/sl-bepinex-pack#test-record]build test results[/url].
