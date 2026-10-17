@@ -114,8 +114,12 @@ if ($checkUnityLibs) {
     $unityVersion = $pin.unityLibs.version
     $unityEntry = "BepInEx/unity-libs/$unityVersion.zip"
     $unity = Read-Entries $UnityLibsZip
-    if ($unity.Count -gt 1) {
-        Add-Failure 'optional file has more than one entry' "$($unity.Keys -join ', ')"
+    # Read-Entries keys by path, so the raw entry list is counted: two entries under one path would count as one.
+    $rawZip = [System.IO.Compression.ZipFile]::OpenRead($UnityLibsZip)
+    try { $rawNames = @($rawZip.Entries | ForEach-Object { $_.FullName }) }
+    finally { $rawZip.Dispose() }
+    if ($rawNames.Count -gt 1) {
+        Add-Failure 'optional file has more than one entry' "$($rawNames -join ', ')"
     }
     if (-not $unity.Contains($unityEntry)) {
         Add-Failure 'optional file entry path' "$unityEntry is not in the optional file"

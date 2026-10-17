@@ -28,6 +28,7 @@ $baselineZip = Join-Path $fixtureDir "BepInExPack_SurvivalLog-$($pin.build)_base
 $unityCases = @(
     @{ Case = 'unity-libs-baseline'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_baseline.zip"; ShouldPass = $true }
     @{ Case = 'unity-libs-two-entries'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_two-entries.zip"; ShouldPass = $false; Rule = 'optional file has more than one entry' }
+    @{ Case = 'unity-libs-duplicate-path'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_duplicate-path.zip"; ShouldPass = $false; Rule = 'optional file has more than one entry' }
     @{ Case = 'unity-libs-wrong-path'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_wrong-path.zip"; ShouldPass = $false; Rule = 'optional file entry path' }
     @{ Case = 'unity-libs-changed-byte'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_changed-byte.zip"; ShouldPass = $false; Rule = 'optional file entry changed' }
     @{ Case = 'unity-libs-no-version'; File = 'UnityLibs_SurvivalLog_no-version.zip'; ShouldPass = $false; Rule = 'optional file name missing Unity version' }
