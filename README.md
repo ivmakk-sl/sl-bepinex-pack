@@ -55,7 +55,8 @@ On the first start, BepInEx downloads the Unity libraries of the game, `6000.2.7
    - the BepInEx site: `https://unity.bepinex.dev/libraries/6000.2.7.zip`
    - the mirror on GitHub, an asset of the latest release of this pack: `https://github.com/ivmakk-sl/sl-bepinex-pack/releases/latest/download/6000.2.7.zip`. GitHub shows its SHA-256 on the release page.
 3. If the downloaded file has another name (Nexus can add numbers to it), rename it to exactly `6000.2.7.zip`.
-4. Do not extract it. Put the zip itself into `BepInEx\unity-libs\` in the game folder (create the folder if it is missing). When asked, replace the existing file. With the default Steam folder, the result is `C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\unity-libs\6000.2.7.zip`.
+4. Do not extract it. Put the zip itself into `BepInEx\unity-libs\` in the game folder (create the folder if it is missing). When asked, replace the existing file. Full path example:
+   - Steam: `C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\unity-libs\6000.2.7.zip`
 5. Start the game. BepInEx now uses the file and downloads nothing.
 
 The file belongs to one Unity version of the game. When a game update moves the game to a new Unity version, BepInEx looks for a new file name and downloads again, and the Nexus page and the latest release get the new file.
