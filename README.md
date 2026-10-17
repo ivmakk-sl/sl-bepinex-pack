@@ -51,7 +51,7 @@ On the first start, BepInEx downloads the Unity libraries of the game, `6000.2.7
 
 1. Close the game.
 2. Download the Unity libraries zip from one of these places:
-   - **Unity libraries 6000.2.7** in the optional files of the [Files tab of the Nexus page](https://www.nexusmods.com/survivallog/mods/12?tab=files)
+   - `Unity libraries 6000.2.7` in the optional files of the [Files tab of the Nexus page](https://www.nexusmods.com/survivallog/mods/12?tab=files)
    - the BepInEx site: `https://unity.bepinex.dev/libraries/6000.2.7.zip`
    - the mirror on GitHub, an asset of the latest release of this pack: `https://github.com/ivmakk-sl/sl-bepinex-pack/releases/latest/download/6000.2.7.zip`. GitHub shows its SHA-256 on the release page.
 3. If the downloaded file has another name (Nexus can add numbers to it), rename it to exactly `6000.2.7.zip`.

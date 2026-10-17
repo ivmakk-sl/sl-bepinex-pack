@@ -37,7 +37,7 @@ Mods go into [font=Courier New]BepInEx\plugins[/font]. Follow each mod's install
 [*][b]No console window opens.[/b] Check that [font=Courier New]winhttp.dll[/font] is next to [font=Courier New]SurvivalLog.exe[/font]. If the zip extracted into an extra folder, move its contents into the game folder.[/*]
 [*][b]The first start stays at "Downloading unity base libraries", or the console shows "End of Central Directory record could not be found".[/b] The game could not download the Unity libraries from the BepInEx site, and no mod loads. Starting the game again does not fix it: BepInEx keeps the broken download and tries it again at each start. To fix it:[list=1]
 [*]Close the game.[/*]
-[*]Download [b]Unity libraries 6000.2.7[/b] from the [url=https://www.nexusmods.com/survivallog/mods/12?tab=files]Nexus optional files[/url]. Mirrors: [url=https://unity.bepinex.dev/libraries/6000.2.7.zip]BepInEx site[/url], [url=https://github.com/ivmakk-sl/sl-bepinex-pack/releases/latest/download/6000.2.7.zip]GitHub[/url].[/*]
+[*]Download [font=Courier New]Unity libraries 6000.2.7[/font] from the [url=https://www.nexusmods.com/survivallog/mods/12?tab=files]Nexus optional files[/url]. Mirrors: [url=https://unity.bepinex.dev/libraries/6000.2.7.zip]BepInEx site[/url], [url=https://github.com/ivmakk-sl/sl-bepinex-pack/releases/latest/download/6000.2.7.zip]GitHub[/url].[/*]
 [*]If the file has another name (Nexus can add numbers to it), rename it to exactly [font=Courier New]6000.2.7.zip[/font].[/*]
 [*]Do not extract it. Put the zip itself into [font=Courier New]BepInEx\unity-libs[/font] in the game folder, and replace the existing file. Full path example:
 [code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\unity-libs\6000.2.7.zip[/code][/*]
