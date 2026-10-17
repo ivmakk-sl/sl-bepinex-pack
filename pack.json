@@ -3,5 +3,10 @@
   "commit": "5b766a3b7f6c164d4798924a93f3acf4db769d06",
   "archive": "BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.788+5b766a3.zip",
   "url": "https://builds.bepinex.dev/projects/bepinex_be/788/BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.788%2B5b766a3.zip",
-  "sha256": "F4CC496BD098A0DF4164B81E3737297707F13A47C2478DBA2F60EEFAB784817A"
+  "sha256": "F4CC496BD098A0DF4164B81E3737297707F13A47C2478DBA2F60EEFAB784817A",
+  "unityLibs": {
+    "version": "6000.2.7",
+    "url": "https://unity.bepinex.dev/libraries/6000.2.7.zip",
+    "sha256": "21DA939863D73D8530985A5573FF171821B045D9D1094B04547CC2CC4B9EDFCF"
+  }
 }

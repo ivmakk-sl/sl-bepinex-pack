@@ -3,7 +3,7 @@ NOTE: It's a mod loader, NOT a mod! Install this pack only if another mod requir
 [size=5][b]What this is[/b][/size]
 BepInEx is a mod loader for Survival Log. Install this pack if a mod lists it as a requirement.
 
-This pack contains the official BepInEx build [url=https://builds.bepinex.dev/projects/bepinex_be][b]6.0.0-be.788[/b][/url] ([font=Courier New]BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.788+5b766a3.zip[/font]) with its original files unchanged. Tested with Survival Log 1.0.16756.
+This pack contains the official BepInEx build [url=https://builds.bepinex.dev/projects/bepinex_be][b]6.0.0-be.788[/b][/url] ([font=Courier New]BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.788+5b766a3.zip[/font]) with its original files unchanged. Tested with Survival Log 1.1.18902.
 
 [b]This pack is unofficial.[/b] The Survival Log developer does not make, support, or endorse it. The BepInEx team does not endorse this pack either.
 
@@ -24,7 +24,7 @@ Example after extraction (other game files omitted):
 
 [size=5][b]The first start[/b][/size]
 [list]
-[*]An internet connection is required for the initial setup.[/*]
+[*]An internet connection is required for the initial setup. BepInEx downloads the Unity libraries of the game (about 2.5 MB) from the BepInEx site.[/*]
 [*]The game may show a black window while BepInEx prepares files. The first start took about 40 seconds longer on my PC. Wait for the main menu.[/*]
 [*]The BepInEx console window opens with the game. [b]Do not close the console window[/b], because that also closes the game.[/*]
 [/list]
@@ -35,6 +35,13 @@ Mods go into [font=Courier New]BepInEx\plugins[/font]. Follow each mod's install
 [size=5][b]Problems[/b][/size]
 [list]
 [*][b]No console window opens.[/b] Check that [font=Courier New]winhttp.dll[/font] is next to [font=Courier New]SurvivalLog.exe[/font]. If the zip extracted into an extra folder, move its contents into the game folder.[/*]
+[*][b]The first start stays at "Downloading unity base libraries", or the console shows "End of Central Directory record could not be found".[/b] The game could not download the Unity libraries from the BepInEx site, and no mod loads. Starting the game again does not fix it: BepInEx keeps the broken download and tries it again at each start. To fix it:[list=1]
+[*]Close the game.[/*]
+[*]Download [font=Courier New]Unity libraries 6000.2.7[/font] from the [url=https://www.nexusmods.com/survivallog/mods/12?tab=files]Nexus optional files[/url]. Mirrors: [url=https://unity.bepinex.dev/libraries/6000.2.7.zip]BepInEx site[/url], [url=https://github.com/ivmakk-sl/sl-bepinex-pack/releases/latest/download/6000.2.7.zip]GitHub[/url].[/*]
+[*]Rename the file to exactly [font=Courier New]6000.2.7.zip[/font]. The Nexus download has a longer name, like [font=Courier New]Unity libraries 6000.2.7 12 6000.2.7 2026-10-17T11-48Z mBe4f4LBp.zip[/font].[/*]
+[*]Do not extract it. Put the zip itself into [font=Courier New]BepInEx\unity-libs[/font] in the game folder, and replace the existing file. Full path example:
+[code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\unity-libs\6000.2.7.zip[/code][/*]
+[*]Start the game.[/*][/list][/*]
 [*][b]BepInEx is already installed.[/b] If the console shows [font=Courier New]6.0.0-be.788[/font], you do not need this pack. For a different build, follow the [url=https://github.com/ivmakk-sl/sl-bepinex-pack#replace-an-existing-installation]replacement instructions[/url].[/*]
 [*][b]My antivirus warns about winhttp.dll.[/b] This file loads BepInEx. It is unchanged from the official build. See [url=https://github.com/ivmakk-sl/sl-bepinex-pack#verify-the-download]how to compare the files with the official download[/url].[/*]
 [*][b]Mods stopped working after a game update.[/b] Check this page and your mods' pages for updates. To play without mods, follow the Uninstall steps below.[/*]
