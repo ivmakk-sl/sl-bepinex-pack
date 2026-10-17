@@ -23,10 +23,26 @@ $cases = @(
     @{ Case = 'dropped-plugins-dir'; ShouldPass = $false; Rule = 'plugins or patchers folder missing' }
 )
 
-$failed = 0
+$officialArchive = Join-Path $root "cache/$($pin.archive)"
+$baselineZip = Join-Path $fixtureDir "BepInExPack_SurvivalLog-$($pin.build)_baseline.zip"
+$unityCases = @(
+    @{ Case = 'unity-libs-baseline'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_baseline.zip"; ShouldPass = $true }
+    @{ Case = 'unity-libs-two-entries'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_two-entries.zip"; ShouldPass = $false; Rule = 'optional file has more than one entry' }
+    @{ Case = 'unity-libs-wrong-path'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_wrong-path.zip"; ShouldPass = $false; Rule = 'optional file entry path' }
+    @{ Case = 'unity-libs-changed-byte'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_changed-byte.zip"; ShouldPass = $false; Rule = 'optional file entry changed' }
+    @{ Case = 'unity-libs-no-version'; File = 'UnityLibs_SurvivalLog_no-version.zip'; ShouldPass = $false; Rule = 'optional file name missing Unity version' }
+)
+foreach ($c in $unityCases) {
+    $c.Args = @($baselineZip, $officialArchive, (Join-Path $fixtureDir $c.File))
+}
 foreach ($c in $cases) {
-    $zip = Join-Path $fixtureDir "BepInExPack_SurvivalLog-$($pin.build)_$($c.Case).zip"
-    $out = (& pwsh -NoProfile -File $verify $zip 2>&1 | Out-String)
+    $c.Args = @(Join-Path $fixtureDir "BepInExPack_SurvivalLog-$($pin.build)_$($c.Case).zip")
+}
+
+$failed = 0
+foreach ($c in $cases + $unityCases) {
+    $verifyArgs = $c.Args
+    $out = (& pwsh -NoProfile -File $verify @verifyArgs 2>&1 | Out-String)
     $code = $LASTEXITCODE
     $problems = @()
     if ($c.ShouldPass) {
@@ -80,31 +96,64 @@ if ($problems.Count -gt 0) {
 }
 else { Write-Host 'ok   built-notice' }
 
-$mismatchDir = Join-Path $fixtureDir 'hash-mismatch'
-$mismatchOut = Join-Path $mismatchDir 'dist'
-New-Item -ItemType Directory -Force -Path $mismatchDir | Out-Null
-$wrongHash = '0' * 64
-$badPinFile = Join-Path $mismatchDir 'pack.json'
-$badPin = Get-Content (Join-Path $root 'pack.json') -Raw | ConvertFrom-Json
-$badPin.sha256 = $wrongHash
-$badPin | ConvertTo-Json | Set-Content -LiteralPath $badPinFile
-$out = (& pwsh -NoProfile -File (Join-Path $root 'pack.ps1') -PinFile $badPinFile -OutDir $mismatchOut 2>&1 | Out-String)
-$code = $LASTEXITCODE
+$unityEntry = "BepInEx/unity-libs/$($pin.unityLibs.version).zip"
+$builtUnityLibs = Join-Path $builtDir "UnityLibs_SurvivalLog-$($pin.unityLibs.version).zip"
 $problems = @()
-if ($code -eq 0) { $problems += 'expected a non-zero exit' }
-if ($out -notmatch [regex]::Escape($wrongHash)) { $problems += 'message does not name the expected hash' }
-if ($out -notmatch [regex]::Escape($pin.sha256)) { $problems += 'message does not name the actual hash' }
-if (Test-Path -LiteralPath $mismatchOut) {
-    if (@(Get-ChildItem -LiteralPath $mismatchOut -Filter *.zip).Count -gt 0) { $problems += 'a zip was produced' }
+if (-not (Test-Path -LiteralPath $builtUnityLibs)) { $problems += "optional file is missing: $builtUnityLibs" }
+else {
+    $archive = [IO.Compression.ZipFile]::OpenRead($builtUnityLibs)
+    try {
+        $names = @($archive.Entries | ForEach-Object { $_.FullName })
+        if ($names.Count -ne 1 -or $names[0] -ne $unityEntry) { $problems += "entries are '$($names -join ', ')', expected only $unityEntry" }
+        else {
+            $entry = $archive.Entries[0]
+            if ($entry.CompressedLength -ne $entry.Length) { $problems += 'the inner zip is compressed again' }
+            $s = $entry.Open()
+            try { $hash = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::HashData($s)).Replace('-', '') }
+            finally { $s.Dispose() }
+            if ($hash -ne $pin.unityLibs.sha256.ToUpperInvariant()) { $problems += "inner zip hash $hash differs from the pin" }
+        }
+    }
+    finally { $archive.Dispose() }
+    $out = (& pwsh -NoProfile -File $verify $builtZip $officialArchive $builtUnityLibs 2>&1 | Out-String)
+    if ($LASTEXITCODE -ne 0) { $problems += "built optional file verification failed: $out" }
 }
 if ($problems.Count -gt 0) {
     $failed++
-    Write-Host "FAIL hash-mismatch: $($problems -join '; ')"
-    Write-Host $out.Trim()
+    Write-Host "FAIL built-unity-libs: $($problems -join '; ')"
 }
-else {
-    Write-Host 'ok   hash-mismatch'
+else { Write-Host 'ok   built-unity-libs' }
+
+function Test-HashMismatch([string]$case, [scriptblock]$breakPin, [string]$actualHash) {
+    $mismatchDir = Join-Path $fixtureDir $case
+    $mismatchOut = Join-Path $mismatchDir 'dist'
+    New-Item -ItemType Directory -Force -Path $mismatchDir | Out-Null
+    $wrongHash = '0' * 64
+    $badPinFile = Join-Path $mismatchDir 'pack.json'
+    $badPin = Get-Content (Join-Path $root 'pack.json') -Raw | ConvertFrom-Json
+    & $breakPin $badPin $wrongHash
+    $badPin | ConvertTo-Json | Set-Content -LiteralPath $badPinFile
+    $out = (& pwsh -NoProfile -File (Join-Path $root 'pack.ps1') -PinFile $badPinFile -OutDir $mismatchOut 2>&1 | Out-String)
+    $code = $LASTEXITCODE
+    $problems = @()
+    if ($code -eq 0) { $problems += 'expected a non-zero exit' }
+    if ($out -notmatch [regex]::Escape($wrongHash)) { $problems += 'message does not name the expected hash' }
+    if ($out -notmatch [regex]::Escape($actualHash)) { $problems += 'message does not name the actual hash' }
+    if (Test-Path -LiteralPath $mismatchOut) {
+        if (@(Get-ChildItem -LiteralPath $mismatchOut -Filter *.zip).Count -gt 0) { $problems += 'a zip was produced' }
+    }
+    if ($problems.Count -gt 0) {
+        $script:failed++
+        Write-Host "FAIL ${case}: $($problems -join '; ')"
+        Write-Host $out.Trim()
+    }
+    else {
+        Write-Host "ok   $case"
+    }
 }
+
+Test-HashMismatch 'hash-mismatch' { param($p, $h) $p.sha256 = $h } $pin.sha256
+Test-HashMismatch 'unity-libs-hash-mismatch' { param($p, $h) $p.unityLibs.sha256 = $h } $pin.unityLibs.sha256
 
 if (-not $KeepFixtures) {
     $resolvedFixtures = [IO.Path]::GetFullPath($fixtureDir)
@@ -117,5 +166,5 @@ if ($failed -gt 0) {
     Write-Host "tests: FAILED ($failed)"
     exit 1
 }
-Write-Host "tests: PASSED ($($cases.Count + 2) cases)"
+Write-Host "tests: PASSED ($($cases.Count + $unityCases.Count + 4) cases)"
 exit 0

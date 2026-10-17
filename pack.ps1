@@ -14,21 +14,28 @@ if (-not $OutDir) { $OutDir = Join-Path $root 'dist' }
 
 $pin = Get-Content -LiteralPath $PinFile -Raw | ConvertFrom-Json
 $cacheDir = Join-Path $root 'cache'
+
+function Get-CheckedArchive([string]$path, [string]$url, [string]$sha256) {
+    if (-not (Test-Path -LiteralPath $path)) {
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $path) | Out-Null
+        Write-Host "downloading $url"
+        Invoke-WebRequest -Uri $url -OutFile $path
+    }
+    $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+    if ($actual -ne $sha256.ToUpperInvariant()) {
+        Write-Host "pack: SHA-256 mismatch for $path"
+        Write-Host "  expected $($sha256.ToUpperInvariant())"
+        Write-Host "  actual   $actual"
+        exit 1
+    }
+}
+
+# Both archives are checked before either zip is written.
 $archive = Join-Path $cacheDir $pin.archive
-
-if (-not (Test-Path -LiteralPath $archive)) {
-    New-Item -ItemType Directory -Force -Path $cacheDir | Out-Null
-    Write-Host "downloading $($pin.url)"
-    Invoke-WebRequest -Uri $pin.url -OutFile $archive
-}
-
-$actual = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash
-if ($actual -ne $pin.sha256.ToUpperInvariant()) {
-    Write-Host "pack: SHA-256 mismatch for $archive"
-    Write-Host "  expected $($pin.sha256.ToUpperInvariant())"
-    Write-Host "  actual   $actual"
-    exit 1
-}
+Get-CheckedArchive $archive $pin.url $pin.sha256
+$unityLibs = $pin.unityLibs
+$unityArchive = Join-Path $cacheDir "unity-libs/$($unityLibs.version).zip"
+Get-CheckedArchive $unityArchive $unityLibs.url $unityLibs.sha256
 
 $zipPath = Join-Path $OutDir "BepInExPack_SurvivalLog-$($pin.build).zip"
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
@@ -55,3 +62,14 @@ try {
 finally { $zip.Dispose() }
 
 Write-Host "pack: $zipPath"
+
+# The player extracts this zip into the game folder, which puts the inner zip at the exact path and name that BepInEx looks for.
+$unityZipPath = Join-Path $OutDir "UnityLibs_SurvivalLog-$($unityLibs.version).zip"
+if (Test-Path -LiteralPath $unityZipPath) { Remove-Item -LiteralPath $unityZipPath }
+$unityZip = [System.IO.Compression.ZipFile]::Open($unityZipPath, 'Create')
+try {
+    [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($unityZip, $unityArchive, "BepInEx/unity-libs/$($unityLibs.version).zip", [System.IO.Compression.CompressionLevel]::NoCompression) | Out-Null
+}
+finally { $unityZip.Dispose() }
+
+Write-Host "pack: $unityZipPath"

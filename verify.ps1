@@ -1,7 +1,8 @@
 #!/usr/bin/env pwsh
 param(
     [string]$PackZip,
-    [string]$OfficialArchive
+    [string]$OfficialArchive,
+    [string]$UnityLibsZip
 )
 
 Set-StrictMode -Version Latest
@@ -11,10 +12,15 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $root = $PSScriptRoot
 $pin = Get-Content (Join-Path $root 'pack.json') -Raw | ConvertFrom-Json
 
+# The optional file is checked when it is named, or in a call with no arguments (the whole dist/ folder).
+$checkUnityLibs = [bool]$UnityLibsZip -or $PSBoundParameters.Count -eq 0
+if (-not $UnityLibsZip) { $UnityLibsZip = Join-Path $root "dist/UnityLibs_SurvivalLog-$($pin.unityLibs.version).zip" }
 if (-not $PackZip) { $PackZip = Join-Path $root "dist/BepInExPack_SurvivalLog-$($pin.build).zip" }
 if (-not $OfficialArchive) { $OfficialArchive = Join-Path $root "cache/$($pin.archive)" }
 
-foreach ($p in @($PackZip, $OfficialArchive)) {
+$required = @($PackZip, $OfficialArchive)
+if ($checkUnityLibs) { $required += $UnityLibsZip }
+foreach ($p in $required) {
     if (-not (Test-Path -LiteralPath $p)) {
         Write-Host "verify: file not found: $p"
         exit 2
@@ -104,8 +110,28 @@ if ($zipName -notlike "*$($pin.build)*") {
     Add-Failure 'zip name missing build identifier' "$zipName does not carry the build $($pin.build)"
 }
 
+if ($checkUnityLibs) {
+    $unityVersion = $pin.unityLibs.version
+    $unityEntry = "BepInEx/unity-libs/$unityVersion.zip"
+    $unity = Read-Entries $UnityLibsZip
+    if ($unity.Count -gt 1) {
+        Add-Failure 'optional file has more than one entry' "$($unity.Keys -join ', ')"
+    }
+    if (-not $unity.Contains($unityEntry)) {
+        Add-Failure 'optional file entry path' "$unityEntry is not in the optional file"
+    }
+    elseif ($unity[$unityEntry].Hash -ne $pin.unityLibs.sha256.ToUpperInvariant()) {
+        Add-Failure 'optional file entry changed' "$unityEntry has SHA-256 $($unity[$unityEntry].Hash), the pin is $($pin.unityLibs.sha256)"
+    }
+    $unityName = Split-Path -Leaf $UnityLibsZip
+    if ($unityName -notlike "*$unityVersion*") {
+        Add-Failure 'optional file name missing Unity version' "$unityName does not carry the Unity version $unityVersion"
+    }
+}
+
 Write-Host "pack:     $PackZip"
 Write-Host "official: $OfficialArchive"
+if ($checkUnityLibs) { Write-Host "optional: $UnityLibsZip" }
 
 if ($failures.Count -gt 0) {
     $failures | ForEach-Object { Write-Host $_ }
