@@ -6,10 +6,10 @@
 - Category: Utilities (or the closest category the game offers for tools and frameworks)
 - Version: `6.0.0-be.788` (the BepInEx build identifier, with `.2`, `.3` for a repack of the same build, for example `6.0.0-be.788.2`)
 - File name under Manage Files: `BepInEx Pack 6.0.0-be.788`, the zip `BepInExPack_SurvivalLog-6.0.0-be.788.zip`, marked as the main file. It is the same zip as the GitHub Release asset.
-- Optional file under Manage Files: `UnityLibs SurvivalLog 6000.2.7` (uploaded 2026-10-17), the zip `UnityLibs_SurvivalLog-6000.2.7.zip` from `dist/`, category Optional files, version `6000.2.7`. The wrapped file is not on GitHub: the GitHub release carries the raw `6000.2.7.zip` as a mirror instead. When the game moves to a new Unity version, upload the new file and remove the old one (README, "A new Unity version of the game"). File description (plain text, at most 255 characters):
+- Optional file under Manage Files: `UnityLibs SurvivalLog 6000.2.7`, the raw zip `dist/6000.2.7.zip` (the file of `unity.bepinex.dev`, the same as the GitHub mirror), category Optional files, version `6000.2.7`. Never a zip that holds another zip: Nexus quarantined the first upload of 2026-10-17, `UnityLibs_SurvivalLog-6000.2.7.zip`, for that. When the game moves to a new Unity version, upload the new file and remove the old one (README, "A new Unity version of the game"). File description (plain text, at most 255 characters):
 
 ```
-Fix for a first start that hangs at "Downloading unity base libraries" or shows "End of Central Directory record could not be found". Close the game, extract into the game folder, replace the old file. Unity's own files, unchanged from unity.bepinex.dev.
+Fix for a first start that hangs at "Downloading unity base libraries" or shows "End of Central Directory record could not be found". Close the game. Do not extract: rename to 6000.2.7.zip, put into BepInEx\unity-libs. Unity's files, unchanged.
 ```
 - Requirements: none.
 - Do not post the page in the game's Steam forum or Discord. The developer asked players not to share mod tools there.

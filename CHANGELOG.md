@@ -6,7 +6,7 @@ All notable changes to this pack are documented here. The format is based on [Ke
 
 ### Added
 
-- An optional file on the Nexus page, `UnityLibs_SurvivalLog-6000.2.7.zip`, for a first start that cannot download the Unity libraries from `unity.bepinex.dev`. Extract it into the game folder. The release on GitHub carries the raw `6000.2.7.zip` as a mirror. The pack zip does not change. Tested on a clean install of Survival Log 1.1.18902 (Steam build 25984240).
+- An optional file on the Nexus page, `6000.2.7.zip`, for a first start that cannot download the Unity libraries from `unity.bepinex.dev`. Put it into `BepInEx\unity-libs\` without extracting it. The release on GitHub carries the same file as a mirror. The pack zip does not change. Tested on a clean install of Survival Log 1.1.18902 (Steam build 25984240).
 
 ## [6.0.0-be.788] - 2026-09-20
 

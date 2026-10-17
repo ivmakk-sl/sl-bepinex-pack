@@ -23,27 +23,10 @@ $cases = @(
     @{ Case = 'dropped-plugins-dir'; ShouldPass = $false; Rule = 'plugins or patchers folder missing' }
 )
 
-$officialArchive = Join-Path $root "cache/$($pin.archive)"
-$baselineZip = Join-Path $fixtureDir "BepInExPack_SurvivalLog-$($pin.build)_baseline.zip"
-$unityCases = @(
-    @{ Case = 'unity-libs-baseline'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_baseline.zip"; ShouldPass = $true }
-    @{ Case = 'unity-libs-two-entries'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_two-entries.zip"; ShouldPass = $false; Rule = 'optional file has more than one entry' }
-    @{ Case = 'unity-libs-duplicate-path'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_duplicate-path.zip"; ShouldPass = $false; Rule = 'optional file has more than one entry' }
-    @{ Case = 'unity-libs-wrong-path'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_wrong-path.zip"; ShouldPass = $false; Rule = 'optional file entry path' }
-    @{ Case = 'unity-libs-changed-byte'; File = "UnityLibs_SurvivalLog-$($pin.unityLibs.version)_changed-byte.zip"; ShouldPass = $false; Rule = 'optional file entry changed' }
-    @{ Case = 'unity-libs-no-version'; File = 'UnityLibs_SurvivalLog_no-version.zip'; ShouldPass = $false; Rule = 'optional file name missing Unity version' }
-)
-foreach ($c in $unityCases) {
-    $c.Args = @($baselineZip, $officialArchive, (Join-Path $fixtureDir $c.File))
-}
-foreach ($c in $cases) {
-    $c.Args = @(Join-Path $fixtureDir "BepInExPack_SurvivalLog-$($pin.build)_$($c.Case).zip")
-}
-
 $failed = 0
-foreach ($c in $cases + $unityCases) {
-    $verifyArgs = $c.Args
-    $out = (& pwsh -NoProfile -File $verify @verifyArgs 2>&1 | Out-String)
+foreach ($c in $cases) {
+    $zip = Join-Path $fixtureDir "BepInExPack_SurvivalLog-$($pin.build)_$($c.Case).zip"
+    $out = (& pwsh -NoProfile -File $verify $zip 2>&1 | Out-String)
     $code = $LASTEXITCODE
     $problems = @()
     if ($c.ShouldPass) {
@@ -97,28 +80,15 @@ if ($problems.Count -gt 0) {
 }
 else { Write-Host 'ok   built-notice' }
 
-$unityEntry = "BepInEx/unity-libs/$($pin.unityLibs.version).zip"
-$builtUnityLibs = Join-Path $builtDir "UnityLibs_SurvivalLog-$($pin.unityLibs.version).zip"
+$builtUnityLibs = Join-Path $builtDir "$($pin.unityLibs.version).zip"
 $problems = @()
 if (-not (Test-Path -LiteralPath $builtUnityLibs)) { $problems += "optional file is missing: $builtUnityLibs" }
 else {
-    $archive = [IO.Compression.ZipFile]::OpenRead($builtUnityLibs)
-    try {
-        $names = @($archive.Entries | ForEach-Object { $_.FullName })
-        if ($names.Count -ne 1 -or $names[0] -ne $unityEntry) { $problems += "entries are '$($names -join ', ')', expected only $unityEntry" }
-        else {
-            $entry = $archive.Entries[0]
-            if ($entry.CompressedLength -ne $entry.Length) { $problems += 'the inner zip is compressed again' }
-            $s = $entry.Open()
-            try { $hash = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::HashData($s)).Replace('-', '') }
-            finally { $s.Dispose() }
-            if ($hash -ne $pin.unityLibs.sha256.ToUpperInvariant()) { $problems += "inner zip hash $hash differs from the pin" }
-        }
-    }
-    finally { $archive.Dispose() }
-    $out = (& pwsh -NoProfile -File $verify $builtZip $officialArchive $builtUnityLibs 2>&1 | Out-String)
-    if ($LASTEXITCODE -ne 0) { $problems += "built optional file verification failed: $out" }
+    $hash = (Get-FileHash -LiteralPath $builtUnityLibs -Algorithm SHA256).Hash
+    if ($hash -ne $pin.unityLibs.sha256.ToUpperInvariant()) { $problems += "optional file hash $hash differs from the pin" }
 }
+$wrapped = @(Get-ChildItem -LiteralPath $builtDir -Filter 'UnityLibs_SurvivalLog-*.zip')
+if ($wrapped.Count -gt 0) { $problems += "a wrapped optional file was written: $($wrapped.Name -join ', ')" }
 if ($problems.Count -gt 0) {
     $failed++
     Write-Host "FAIL built-unity-libs: $($problems -join '; ')"
@@ -167,5 +137,5 @@ if ($failed -gt 0) {
     Write-Host "tests: FAILED ($failed)"
     exit 1
 }
-Write-Host "tests: PASSED ($($cases.Count + $unityCases.Count + 4) cases)"
+Write-Host "tests: PASSED ($($cases.Count + 4) cases)"
 exit 0

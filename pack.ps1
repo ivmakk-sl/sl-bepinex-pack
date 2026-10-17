@@ -63,13 +63,8 @@ finally { $zip.Dispose() }
 
 Write-Host "pack: $zipPath"
 
-# The player extracts this zip into the game folder, which puts the inner zip at the exact path and name that BepInEx looks for.
-$unityZipPath = Join-Path $OutDir "UnityLibs_SurvivalLog-$($unityLibs.version).zip"
-if (Test-Path -LiteralPath $unityZipPath) { Remove-Item -LiteralPath $unityZipPath }
-$unityZip = [System.IO.Compression.ZipFile]::Open($unityZipPath, 'Create')
-try {
-    [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($unityZip, $unityArchive, "BepInEx/unity-libs/$($unityLibs.version).zip", [System.IO.Compression.CompressionLevel]::NoCompression) | Out-Null
-}
-finally { $unityZip.Dispose() }
+# The optional file is the raw zip of the site: Nexus quarantines an archive inside an archive.
+$unityZipPath = Join-Path $OutDir "$($unityLibs.version).zip"
+Copy-Item -LiteralPath $unityArchive -Destination $unityZipPath -Force
 
 Write-Host "pack: $unityZipPath"

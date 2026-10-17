@@ -104,38 +104,4 @@ $droppedPluginsDir = Fixture 'dropped-plugins-dir'
 Copy-Item -LiteralPath $baseline -Destination $droppedPluginsDir
 Remove-ZipEntry $droppedPluginsDir 'BepInEx/plugins/'
 
-$unityVersion = $pin.unityLibs.version
-$unityArchive = Join-Path $root "cache/unity-libs/$unityVersion.zip"
-if (-not (Test-Path -LiteralPath $unityArchive)) { throw "Unity base libraries zip not found: $unityArchive" }
-
-function UnityFixture([string]$case) { Join-Path $OutDir "UnityLibs_SurvivalLog-${unityVersion}_$case.zip" }
-
-function New-UnityLibsZip([string]$zipPath, [string[]]$entryNames) {
-    $zip = [System.IO.Compression.ZipFile]::Open($zipPath, 'Create')
-    try {
-        foreach ($name in $entryNames) {
-            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $unityArchive, $name, [System.IO.Compression.CompressionLevel]::NoCompression) | Out-Null
-        }
-    }
-    finally { $zip.Dispose() }
-}
-
-$unityEntry = "BepInEx/unity-libs/$unityVersion.zip"
-New-UnityLibsZip (UnityFixture 'baseline') @($unityEntry)
-New-UnityLibsZip (UnityFixture 'two-entries') @($unityEntry, "BepInEx/unity-libs/copy-$unityVersion.zip")
-New-UnityLibsZip (UnityFixture 'wrong-path') @("unity-libs/$unityVersion.zip")
-$unityChangedByte = UnityFixture 'changed-byte'
-New-UnityLibsZip $unityChangedByte @($unityEntry)
-Edit-OneByte $unityChangedByte $unityEntry
-New-UnityLibsZip (Join-Path $OutDir 'UnityLibs_SurvivalLog_no-version.zip') @($unityEntry)
-
-# A damaged copy, then the pinned copy under the same path: a check by path alone sees one good entry.
-$unityDuplicatePath = UnityFixture 'duplicate-path'
-Copy-Item -LiteralPath $unityChangedByte -Destination $unityDuplicatePath
-$zip = [System.IO.Compression.ZipFile]::Open($unityDuplicatePath, 'Update')
-try {
-    [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $unityArchive, $unityEntry, [System.IO.Compression.CompressionLevel]::NoCompression) | Out-Null
-}
-finally { $zip.Dispose() }
-
 Get-ChildItem -LiteralPath $OutDir -Filter *.zip | ForEach-Object { Write-Host "fixture: $($_.Name)" }
