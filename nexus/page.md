@@ -16,12 +16,12 @@ Fix for a first start that hangs at "Downloading unity base libraries" or shows 
 
 ## Permissions
 
-The content is the BepInEx team's work under LGPL-2.1, so the page does not claim it.
+The main file is the BepInEx team's work under LGPL-2.1, so the page does not claim it. The optional Unity libraries file is Unity Technologies' work with no stated licence, so the page grants no permission for it: each permission below covers the BepInEx files only.
 
 - Other users' assets: yes, all the loader files belong to the BepInEx team, and the files in the optional Unity libraries file belong to Unity Technologies. Credit both in the credits field.
-- Upload to other sites: allowed, with credit to the BepInEx team.
-- Modification and reuse: allowed under LGPL-2.1, with credit and with the same license.
-- Conversion to other games: allowed.
+- Upload to other sites: allowed for the BepInEx files, with credit to the BepInEx team. Not for the optional Unity libraries file.
+- Modification and reuse: allowed for the BepInEx files under LGPL-2.1, with credit and with the same license. Not for the optional Unity libraries file.
+- Conversion to other games: allowed for the BepInEx files. Not for the optional Unity libraries file.
 - Use in paid mods or for donation points: not allowed. Keep donation points off for this page.
 - Credits field (plain text, no BBCode):
 
@@ -33,7 +33,7 @@ All files in this pack are the official BepInEx build 6.0.0-be.788 from https://
 
 BepInEx bundles these components, each under its own license: UnityDoorstop (LGPL-2.1), HarmonyX (MIT), MonoMod (MIT), Mono.Cecil (MIT), Cpp2IL (MIT), Il2CppInterop (LGPL-3.0), AsmResolver (MIT), Iced (MIT), Dobby (Apache-2.0), the .NET runtime (MIT). The full list is in the notice file.
 
-The optional Unity libraries file holds the Unity engine libraries (UnityEngine.*.dll) of Unity Technologies, unchanged: byte for byte the file that BepInEx downloads from https://unity.bepinex.dev on the first start. I made none of them.
+The optional Unity libraries file holds the Unity engine libraries (UnityEngine.*.dll) of Unity Technologies, unchanged: byte for byte the file that BepInEx downloads from https://unity.bepinex.dev on the first start. I made none of them. No licence is stated for them, and the permissions of this page do not cover them.
 
 The BepInEx logo in the page images belongs to the BepInEx team.
 ```
