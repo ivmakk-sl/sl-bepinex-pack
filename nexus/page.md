@@ -6,10 +6,10 @@
 - Category: Utilities (or the closest category the game offers for tools and frameworks)
 - Version: `6.0.0-be.788` (the BepInEx build identifier, with `.2`, `.3` for a repack of the same build, for example `6.0.0-be.788.2`)
 - File name under Manage Files: `BepInEx Pack 6.0.0-be.788`, the zip `BepInExPack_SurvivalLog-6.0.0-be.788.zip`, marked as the main file. It is the same zip as the GitHub Release asset.
-- Optional file under Manage Files: `Unity libraries 6000.2.7 (optional)`, the zip `UnityLibs_SurvivalLog-6000.2.7.zip` from `dist/`, category Optional files, version `6000.2.7`. The wrapped file is not on GitHub: the GitHub release carries the raw `6000.2.7.zip` as a mirror instead. When the game moves to a new Unity version, upload the new file and remove the old one (README, "A new Unity version of the game"). File description (plain text):
+- Optional file under Manage Files: `Unity libraries 6000.2.7 (optional)`, the zip `UnityLibs_SurvivalLog-6000.2.7.zip` from `dist/`, category Optional files, version `6000.2.7`. The wrapped file is not on GitHub: the GitHub release carries the raw `6000.2.7.zip` as a mirror instead. When the game moves to a new Unity version, upload the new file and remove the old one (README, "A new Unity version of the game"). File description (plain text, at most 255 characters):
 
 ```
-Only for a first start that stays at "Downloading unity base libraries" or shows "End of Central Directory record could not be found". Extract into the game folder and replace the existing file. It puts BepInEx\unity-libs\6000.2.7.zip in place, so BepInEx needs no download. The inner zip holds Unity Technologies' Unity engine libraries, unchanged, the same file that BepInEx downloads from unity.bepinex.dev.
+Only for a first start that stays at "Downloading unity base libraries" or shows "End of Central Directory record could not be found". Extract into the game folder and replace the old file. Unity Technologies' files, unchanged from unity.bepinex.dev.
 ```
 - Requirements: none.
 - Do not post the page in the game's Steam forum or Discord. The developer asked players not to share mod tools there.
